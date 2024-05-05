@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import store from './store/index.js'
 import VueApexCharts from "vue3-apexcharts";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
-/* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,6 +18,7 @@ const app = createApp(App);
 library.add(fas);
 
 app.use(VueApexCharts);
+app.use(store);
 
 app.component('base-card', BaseCard);
 app.component('base-select', BaseSelect);
