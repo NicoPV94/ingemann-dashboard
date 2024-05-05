@@ -1,7 +1,11 @@
 <template>
-    <div class="d-flex justify-content-between align-items-center w-100 mb-1">
+    <div class="d-flex justify-content-between align-items-center w-100 mb-2">
         <h2 class="page-title">Usuarios</h2>
-        <input type="date" class="im-input p-1">
+        <vue-datepicker v-model="dateRange" range :format="customFormat" input-class-name="dp-custom-input">
+            <template #range-end-label="{ date }">
+                <span>{{ customFormat(date) }}</span>
+            </template>
+        </vue-datepicker>
     </div>
     <hr class="mb-5">
 
@@ -24,7 +28,7 @@
             <base-select :options="selectOptions" v-model="selectedOption" class="mb-3"></base-select>
             <bar-chart :chart-data="deptChartData" :striped="true" label-color="#ffffff"
                 value-label-color="#1b5661"></bar-chart>
-                <p></p>
+            <p></p>
         </base-card>
         <base-card class="col d-flex flex-column">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -97,6 +101,10 @@ export default {
                 { value: 'option2', icon: 'map', text: 'Departamentos' },
                 { value: 'option3', icon: 'copyright', text: 'Marca' },
             ],
+            dateRange: [
+                "2024-02-28T19:06:00.000Z",
+                "2024-05-05T19:06:00.000Z"
+            ]
         }
     },
     computed: {
@@ -117,7 +125,36 @@ export default {
         },
         ageRangeChartData() {
             return this.$store.getters.ageRangeChartData;
+        }
+    },
+    methods: {
+        customFormat(date) {
+            const startDate = new Date(date[0]);
+            const endDate = new Date(date[1]);
+            const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+                "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            return this.isToday(date) ? `${monthNames[startDate.getMonth()]} ${startDate.getDate()}` + ' - Hoy' :
+                `${monthNames[startDate.getMonth()]} ${startDate.getDate()} - ${monthNames[endDate.getMonth()]} ${endDate.getDate()}`;
         },
+        isToday(dateString) {
+            let date = new Date(dateString);
+            const today = new Date();
+
+            if (dateString[1]) {
+                date = new Date(dateString[1]);
+            }
+
+            return (
+                date.getFullYear() === today.getFullYear() &&
+                date.getMonth() === today.getMonth() &&
+                date.getDate() === today.getDate()
+            );
+        }
+    },
+    watch: {
+        dateRange(value) {
+            console.log(value);
+        }
     }
 }
 </script>
